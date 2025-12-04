@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #1976d2;
+      color: white;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      padding: 15px 20px;
+      text-align: left;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    .sidebar button:hover,
+    .sidebar button.active {
+      background-color: #125ea3;
+    }
+    .main {
+      flex: 1;
+      padding: 20px;
+      background-color: white;
+      overflow-y: auto;
+    }
+    .chart-container {
+      display: none;
+      max-width: 700px;
+      margin: auto;
+    }
+    .chart-container.active {
+      display: block;
+    }
+    canvas {
+      width: 100% !important;
+      max-height: 250px;
+    }
+    /* QR Generator */
+    #qrgenerator {
+      text-align: center;
+    }
+    .qr-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    .qr-form select,
+    .qr-form input {
+      padding: 10px;
+      width: 70%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #qrCodeGenerate {
+      padding: 10px 20px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #qrCodeGenerate:hover {
+      background-color: #125ea3;
+    }
+    #detailsBtn {
+      padding: 10px 15px;
+      background: #0d70a1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    #qrCodeContainer {
+      margin-top: 20px;
+    }
+
+    .manage-btn {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border: none;
+    background: #2C003E;
+    color: white;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .manage-btn:hover {
+    background: #3E005C;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button class="tab-btn active" data-tab="bookings">Bookings Progress</button>
+    <button class="tab-btn" data-tab="equipment">Equipment Usage</button>
+    <button class="tab-btn" data-tab="users">User Registrations</button>
+    <button class="tab-btn" data-tab="qrgenerator">QR Generator</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Bookings -->
+    <div id="bookings" class="chart-container active">
+      <canvas id="bookingsChart"></canvas>
+      <button class="manage-btn" onclick="location.href='managebookings.html'">Manage Bookings</button>
+    </div>
+
+    <!-- Equipment -->
+    <div id="equipment" class="chart-container">
+      <canvas id="equipmentChart"></canvas>
+      <button class="manage-btn" onclick="location.href='managequipment.html'">Manage Equipment</button>
+    </div>
+
+    <!-- Users -->
+    <div id="users" class="chart-container">
+      <canvas id="usersChart"></canvas>
+      <button class="manage-btn" onclick="location.href='manageusers.html'">Manage Users</button>
+    </div>
+
+
+    <!-- QR Code Generator -->
+    <div id="qrgenerator" class="chart-container">
+      <h3>Generate QR Code for Equipment</h3>
+      <div class="qr-form">
+        <select id="equipmentSelect">
+          <option value="Cricket Bat">Cricket Bat</option>
+          <option value="Football">Football</option>
+          <option value="Volleyball">Volleyball</option>
+          <option value="Badminton">Badminton</option>
+          <option value="Tennis">Tennis</option>
+          <option value="Hockey">Hockey</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Frisbee">Frisbee</option>
+          <option value="Table Tennis">Table Tennis</option>
+          <option value="Carrom Board">Carrom Board</option>
+          <option value="Chess Board">Chess Board</option>
+          <option value="Indoor Shuttle">Indoor Shuttle</option>
+          <option value="Dumbbells">Dumbbells</option>
+          <option value="Yoga">Yoga</option>
+          <option value="Resistance Band">Resistance Band</option>
+          <option value="Skipping Rope">Skipping Rope</option>
+          <option value="Javelin">Javelin</option>
+          <option value="Shot Put">Shot Put</option>
+          <option value="Relay Baton">Relay Baton</option>
+          <option value="Hurdles">Hurdles</option>
+        </select>
+
+        <input type="text" id="qrCodeUrl" readonly />
+
+        <button id="qrCodeGenerate">Generate QR Code</button>
+        <button id="detailsBtn">Go to Details</button>
+        <div id="qrCodeContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const charts = document.querySelectorAll('.chart-container');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-tab');
+        charts.forEach(c => c.classList.remove('active'));
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    // Equipment details
+    const equipmentDetails = {
+      "Cricket Bat": { category: "Outdoor", quantity: 10 },
+      "Football": { category: "Outdoor", quantity: 10 },
+      "Volleyball": { category: "Outdoor", quantity: 10 },
+      "Badminton": { category: "Outdoor", quantity: 10 },
+      "Tennis": { category: "Outdoor", quantity: 10 },
+      "Hockey": { category: "Outdoor", quantity: 10 },
+      "Basketball": { category: "Outdoor", quantity: 10 },
+      "Frisbee": { category: "Outdoor", quantity: 10 },
+      "Table Tennis": { category: "Indoor", quantity: 10 },
+      "Carrom Board": { category: "Indoor", quantity: 10 },
+      "Chess Board": { category: "Indoor", quantity: 10 },
+      "Indoor Shuttle": { category: "Indoor", quantity: 10 },
+      "Dumbbells": { category: "Fitness", quantity: 10 },
+      "Yoga": { category: "Fitness", quantity: 10 },
+      "Resistance Band": { category: "Fitness", quantity: 10 },
+      "Skipping Rope": { category: "Fitness", quantity: 10 },
+      "Javelin": { category: "Athletics", quantity: 10 },
+      "Shot Put": { category: "Athletics", quantity: 10 },
+      "Relay Baton": { category: "Athletics", quantity: 10 },
+      "Hurdles": { category: "Athletics", quantity: 10 }
+    };
+
+    // QR Code Generator
+    const generateBtn = document.getElementById("qrCodeGenerate");
+    const qrInput = document.getElementById("qrCodeUrl");
+    const qrContainer = document.getElementById("qrCodeContainer");
+    const equipmentSelect = document.getElementById("equipmentSelect");
+
+    function updateQRCodeURL() {
+      const equipmentName = equipmentSelect.value;
+      qrInput.value = `details.html?equipment=${encodeURIComponent(equipmentName)}`;
+    }
+
+    // Initialize URL on load
+    updateQRCodeURL();
+    equipmentSelect.addEventListener("change", updateQRCodeURL);
+
+    generateBtn.addEventListener("click", () => {
+      updateQRCodeURL();
+      qrContainer.innerHTML = "";
+      new QRCode(qrContainer, {
+        text: qrInput.value,
+        width: 150,
+        height: 150
+      });
+    });
+
+    // Go to details
+    document.getElementById("detailsBtn").addEventListener("click", () => {
+      const selected = equipmentSelect.value;
+      const { category, quantity } = equipmentDetails[selected] || {};
+      const url = `details.html?equipment=${encodeURIComponent(selected)}&category=${encodeURIComponent(category)}&quantity=${quantity}`;
+      window.location.href = url;
+    });
+
+    // Charts
+    new Chart(document.getElementById('bookingsChart'), {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Bookings',
+          data: [5, 9, 7, 10, 8, 12, 9],
+          borderColor: '#1976d2',
+          borderWidth: 2,
+          fill: true
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('equipmentChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Balls', 'Bats', 'Nets', 'Rackets', 'Shoes', 'Gloves'],
+        datasets: [{
+          label: 'Equipment Usage',
+          data: [12, 7, 5, 8, 6, 4],
+          backgroundColor: '#4caf50'
+        }]
+      }
+    });
+
+    // new Chart(document.getElementById('usersChart'), {
+    //   type: 'pie',
+    //   data: {
+    //     labels: ['Students', 'Coaches', 'Staff'],
+    //     datasets: [{
+    //       label: 'Users',
+    //       data: [30, 5, 10],
+    //       backgroundColor: ['#9c27b0', '#ba68c8', '#ce93d8']
+    //     }]
+    //   }
+    // });
+
+    new Chart(document.getElementById('usersChart'), {
+  type: 'pie',
+  data: {
+    labels: ['Students', 'Coaches', 'Staff'],
+    datasets: [{
+      label: 'Users',
+      data: [30, 5, 10],
+      backgroundColor: ['#9c27b0', '#ba68c8', '#ce93d8']
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right',      // Legend to the right of the chart
+        align: 'start',         // Align legend items from the top
+        labels: {
+          boxWidth: 20,
+          padding: 50,          // Extra vertical space between labels (⬇ slight downward shift)
+          font: {
+            size: 16            // 👈 Increases font size
+          }
+        }
+      }
+    }
+  }
+});
+  </script>
+</body>
+</html>

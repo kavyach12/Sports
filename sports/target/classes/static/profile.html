@@ -1,0 +1,189 @@
+<!--profile.html-->
+m<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .profile-header {
+      background-color: #1976d2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8em;
+    }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      color: #1976d2;
+      font-size: 1.2em;
+    }
+
+    .form-row {
+      margin: 10px 0;
+    }
+
+    .form-row label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-row input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .form-row input[readonly] {
+      background-color: #eee;
+      cursor: not-allowed;
+    }
+
+    .save-button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .save-button:hover {
+      background-color: #125ea3;
+    }
+
+    .faq-list a,
+    .delete-link {
+      display: block;
+      margin: 8px 0;
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .faq-list a:hover,
+    .delete-link:hover {
+      text-decoration: underline;
+    }
+
+    .delete-link {
+      color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-header" id="greeting">
+    Hello!
+  </div>
+
+  <div class="profile-container">
+    <!-- Personal Info Form -->
+    <div class="section">
+      <h2>👤 Personal Information</h2>
+      <form id="profileForm">
+        <div class="form-row">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" required>
+        </div>
+        <div class="form-row">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" required>
+        </div>
+        <div class="form-row">
+          <label for="gender">Gender</label>
+          <input type="text" id="gender" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" readonly>
+        </div>
+        <div class="form-row">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <button type="submit" class="save-button">Save Profile</button>
+      </form>
+    </div>
+
+    <!-- FAQs -->
+    <div class="section">
+  <h2>❓ FAQs</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <p><strong>Q:</strong> How do I update my email?</p>
+      <p><strong>A:</strong> Your email is linked to your login. To change it, please log out and sign in with a new email.</p>
+    </div>
+    <div class="faq-item">
+      <p><strong>Q:</strong> How do I change my password?</p>
+      <p><strong>A:</strong> Password changes are currently handled by the admin. Please contact support or your administrator.</p>
+    </div>
+    <div class="faq-item">
+      <p><strong>Q:</strong> How do I delete my account?</p>
+      <p><strong>A:</strong> Click the “Delete My Account” button below. This will remove all your saved data and log you out.</p>
+    </div>
+  </div>
+</div>
+
+    <!-- Delete Account -->
+    <div class="section">
+      <h2>🗑️ Account</h2>
+     <a href="#" class="delete-link" onclick="deleteAccount()">Delete My Account</a>
+
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('profileForm');
+    const greeting = document.getElementById('greeting');
+    const emailField = document.getElementById('email');
+
+    // Get email from localStorage and set it
+    const loggedInEmail = localStorage.getItem('userEmail') || '';
+    emailField.value = loggedInEmail;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const firstName = document.getElementById('firstName').value;
+      greeting.textContent = `Hello, ${firstName}!`;
+
+      alert("Profile saved successfully.");
+    });
+    function deleteAccount() {
+  const confirmDelete = confirm("Are you sure you want to delete your account?");
+  if (confirmDelete) {
+    localStorage.clear(); // Removes all keys and values
+    alert("Your account has been deleted.");
+    window.location.href = "home.html";
+  }
+}
+  </script>
+</body>
+</html>

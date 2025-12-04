@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sports Equipment Booking</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d70a1;
+            color: white;
+            padding: 10px 20px;
+        }
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        #searchBar {
+            width: 40%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        .user-menu {
+            position: relative;
+            margin-left: 20px;
+        }
+        .user-name {
+            cursor: pointer;
+            font-weight: bold;
+            background-color: white;
+            color: black;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .user-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px;
+            width: 180px;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: left;
+        }
+        .user-dropdown a {
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.95em;
+            border-radius: 4px;
+        }
+        .user-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            background-color: #bbdefb;
+            margin-bottom: 10px;
+        }
+        .banner img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .banner img.active {
+            opacity: 1;
+            position: relative;
+        }
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background-color: #e3f2fd;
+            padding: 10px;
+        }
+        .categories button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #0d70a1;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .equipment-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .equipment-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            text-align: center;
+        }
+        .equipment-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #eee;
+        }
+        .equipment-card h3 {
+            margin: 10px 0 5px;
+        }
+        .equipment-card p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .equipment-card button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #43a047;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Smooth transition for hover effects */
+    .equipment-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* When hovered, make it pop */
+    .equipment-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    /* Dim other cards when one is hovered */
+    /* .equipment-container:hover .equipment-card {
+        opacity: 0.5;
+    } */
+
+    /* Keep hovered card fully visible */
+    .equipment-card:hover {
+        opacity: 1;
+    }
+
+
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">🏏 SportsKart</div>
+    <input type="text" id="searchBar" placeholder="Search equipment..." onkeyup="searchEquipment()" />
+    <div class="user-menu">
+        <div class="user-name" onclick="toggleUserMenu()">👤 Profile ▾</div>
+        <div class="user-dropdown" id="userDropdown">
+            <a href="profile.html">My Profile</a>
+            <a href="notifications.html">Notifications</a>
+            <a href="bookings.html">My Bookings</a>
+            <a href="home.html">Logout</a>
+        </div>
+    </div>
+</header>
+
+<section class="banner" id="banner">
+    <img src="https://img.freepik.com/premium-photo/tball-equipment-including-helmet-bat-ball-grass_124507-264634.jpg?w=740" class="active" />
+    <img src="https://i.pinimg.com/originals/24/be/1c/24be1c41cd2abc175a087c2908478a88.jpg" />
+    <img src="https://png.pngtree.com/background/20230617/original/pngtree-clipping-path-included-grass-field-banner-with-3d-rendered-soccer-ball-picture-image_3682689.jpg" />
+    <img src="https://images.squarespace-cdn.com/content/v1/5bd969d6506fbe4b1a0f5e6b/1613556027347-TNYY9VEX2PRTODIHEP9J/shutterstock_1592944909+-+Badminton+racket+and+shuttlecock+in+motion_1200px+JPEG.jpg" />
+</section>
+
+<nav class="categories">
+    <button onclick="filterCategory('All')">Show All</button>
+    <button onclick="filterCategory('Outdoor')">Outdoor Sports</button>
+    <button onclick="filterCategory('Indoor')">Indoor Sports</button>
+    <button onclick="filterCategory('Fitness')">Fitness & Training</button>
+    <button onclick="filterCategory('Athletics')">Athletics Gear</button>
+</nav>
+
+<h1 style="text-align:center;">Available Sports Equipment</h1>
+<div class="equipment-container" id="equipmentList"></div>
+
+<script>
+    let allEquipment = [];
+
+    fetch('/equipment')
+        .then(response => response.json())
+        .then(data => {
+            allEquipment = data;
+            renderEquipment(allEquipment);
+        })
+        .catch(err => console.error(err));
+
+    function renderEquipment(equipmentArray) {
+        const container = document.getElementById('equipmentList');
+        container.innerHTML = '';
+
+        equipmentArray.forEach(equipment => {
+            const card = document.createElement('div');
+            card.className = 'equipment-card';
+            card.setAttribute('data-category', equipment.type || 'Other');
+
+            card.innerHTML = `
+                <img src="${equipment.imageUrl || 'images/default.jpg'}" alt="${equipment.name}">
+                <h3>${equipment.name}</h3>
+                <p>Category: ${equipment.type || 'N/A'}</p>
+                <p>Total: ${equipment.totalQuantity}</p>
+                <button onclick="bookNow(${equipment.equipmentId})">Book Now</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function filterCategory(category) {
+        if (category === 'All') {
+            renderEquipment(allEquipment);
+        } else {
+            const filtered = allEquipment.filter(eq => eq.type && eq.type.toLowerCase() === category.toLowerCase());
+            renderEquipment(filtered);
+        }
+    }
+
+    function searchEquipment() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filtered = allEquipment.filter(eq => eq.name.toLowerCase().includes(query));
+        renderEquipment(filtered);
+    }
+
+    function bookNow(equipmentId) {
+        window.location.href = `/booknow.html?equipmentId=${equipmentId}`;
+    }
+
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>

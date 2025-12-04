@@ -1,0 +1,407 @@
+<!--home.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Role-Based Login Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: #2C003E;
+      overflow-x: hidden;
+      background-image: url('https://media.istockphoto.com/id/1212703830/photo/fitness-gym-background-with-sports-equipment-for-workout.jpg?s=170667a&w=0&k=20&c=Jag-z-LMytuL-u_PyAeQM_gfggM5QWY7k-coIcIwYBg=');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(255, 255, 255, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .navbar a {
+      color: #2C003E;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-links span,
+    .auth-links a {
+      color: #2C003E;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 40px;
+      flex: 1;
+      flex-wrap: nowrap;
+    }
+
+    .login-box,
+    .welcome-box {
+      width: 30%;
+      min-width: 300px;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: fadeSlide 0.5s ease forwards;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .login-box select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      margin-bottom: 20px;
+      font-size: 1em;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .login-form {
+      display: none;
+      animation: fadeSlide 0.5s ease forwards;
+    }
+
+    .login-form h3 {
+      margin-bottom: 10px;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .login-form input::placeholder {
+      color: #2C003E;
+    }
+
+    .login-form input:focus {
+      outline: none;
+      border: 2px solid #2C003E;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2em;
+      color: #2C003E;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 10px;
+      background: #2C003E;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .login-form button:hover {
+      background: #3E005C;
+      transform: scale(1.03);
+    }
+
+    .welcome-box {
+      color: #2C003E;
+      animation: fadeSlide 0.5s ease forwards;
+    }
+
+    .welcome-box h1 {
+      font-size: 5em;
+      margin-bottom: 10px;
+    }
+
+    .welcome-box p {
+      font-size: 1.3em;
+    }
+
+    .wave {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column-reverse;
+        padding: 20px;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .login-box,
+      .welcome-box {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .welcome-box {
+        text-align: center;
+      }
+
+      .wave {
+        display: none;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar a {
+        margin: 10px 0;
+      }
+
+      .auth-links {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div>
+      <a href="#" onclick="showWelcome()" style="margin-right: 15px; color: black; font-size: 28px;">←</a>
+      <a href="about.html">About</a>
+      <a href="campus-highlights.html" target="_blank">Pictures</a>
+      <a href="#" onclick="showContact(); return false;">Contact</a>
+    </div>
+    <div class="auth-links">
+      <a href="signin.html">Sign In</a>
+      <span>/</span>
+      <a href="home.html">Login</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Welcome Section -->
+    <div class="welcome-box" id="welcome-box">
+      <h1><b>Welcome!</b></h1>
+      <p><b>Your journey to strength, stamina, and self-care starts here. Log in to track your progress, join challenges, and unlock personalized workouts tailored to your goals.</b></p>
+    </div>
+
+    <!-- Login Section -->
+    <div class="login-box">
+      <h2>Login As</h2>
+      <select onchange="showForm(this.value)">
+        <option value="">Select Role</option>
+        <option value="student">Student/Staff</option>
+        <option value="admin">Admin</option>
+      <!-- <option value="staff">Staff</option> -->
+      </select>
+
+      <!-- Student Login Form -->
+      <div id="student-form" class="login-form">
+        <h3>Student/Staff Login</h3>
+        <form id="student-login-form">
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="text" name="regdNumber" placeholder="Register ID" required>
+          <div class="password-wrapper">
+            <input type="password" id="student-password" name="password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('student-password')">👁️</span>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="admin-form" class="login-form">
+        <h3>Admin Login</h3>
+        <form id="admin-login-form">
+          <input type="email" name="email" placeholder="Admin Email" required>
+          <input type="text" name="username" placeholder="Admin Username" required>
+          <div class="password-wrapper">
+            <input type="password" id="admin-password" name="password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('admin-password')">👁️</span>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+
+      <!-- <div id="staff-form" class="login-form">
+        <h3>Staff Login</h3>
+        <form id="staff-login-form">
+          <input type="email" name="email" placeholder="Staff Email" required>
+          <input type="text" name="regdNumber" placeholder="Staff ID" required>
+          <div class="password-wrapper">
+            <input type="password" id="student-password" name="password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('staff-password')">👁️</span>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div> -->
+    </div>
+  </div>
+  
+      
+
+
+  <div class="wave"></div>
+
+  <script>
+  // Show the selected form
+  function showForm(role) {
+    document.getElementById('student-form').style.display = 'none';
+    document.getElementById('admin-form').style.display = 'none';
+    // document.getElementById('staff-form').style.display = 'none';
+
+    if (role === 'student') document.getElementById('student-form').style.display = 'block';
+    else if (role === 'admin') document.getElementById('admin-form').style.display = 'block';
+    // else if (role === 'staff') document.getElementById('staff-form').style.display = 'block';
+
+  }
+
+  // Toggle password visibility
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  // Student login fetch
+  document.getElementById('student-login-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const regdNumber = this.querySelector('input[name="regdNumber"]').value.trim();
+    const password = this.querySelector('input[name="password"]').value.trim();
+
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ regdNumber, password })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Invalid registration number or password");
+      return response.text();
+    })
+    .then(data => {
+      alert(data);
+      // store logged in student regdNumber for later booking
+      localStorage.setItem("loggedInStudentRegdNumber", regdNumber);
+      window.location.href = "index.html";
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+  });
+
+  // Admin login fetch
+  document.getElementById('admin-login-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const email = this.querySelector('input[name="email"]').value.trim();
+    const username = this.querySelector('input[name="username"]').value.trim();
+    const password = this.querySelector('input[name="password"]').value.trim();
+
+    fetch('/auth/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, username, password })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Invalid admin credentials");
+      return response.text();
+    })
+    .then(data => {
+      alert(data);
+      // store admin login flag if needed
+      localStorage.setItem("isAdminLoggedIn", "true");
+      window.location.href = "Adminpannel.html";
+    })
+    .catch(error => {
+      alert(error.message);
+    });
+  });
+
+  function showContact() {
+      const box = document.getElementById('welcome-box');
+      box.innerHTML = `
+        <h3 style="font-size: 30px; font-weight: normal;">
+          <b>Contact Details:</b><br><br>
+          1. Dr. P Satyanarayana Raju – Associate Professor<br>
+          📧 <a href="mailto:srpenmethsa@gmail.com" style="font-size: 20px;">srpenmethsa@gmail.com</a><br>
+          📞 <a href="tel:9441814118" style="font-size: 20px;">9441814118</a><br><br>
+          2. Dr. Ch Hari Mohan – Associate Professor<br>
+          📧 <a href="mailto:hari.srkrpd@gmail.com" style="font-size: 20px;">hari.srkrpd@gmail.com</a><br>
+          📞 <a href="tel:9949111178" style="font-size: 20px;">9949111178</a>
+        </h3>
+      `;
+    }
+
+    function showWelcome() {
+      const box = document.getElementById('welcome-box');
+      box.innerHTML = `
+        <h1><b>Welcome!</b></h1>
+        <p><b>Your journey to strength, stamina, and self-care starts here. Log in to track your progress, join challenges, and unlock personalized workouts tailored to your goals.</b></p>
+      `;
+    }
+
+</script>
+
+</body>
+
+</html>

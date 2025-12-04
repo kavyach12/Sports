@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Item Details | SportsKart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background-color: #0d70a1;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+
+    .details-container {
+      margin-top: 50px;
+      background-color: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .details-container h2 {
+      margin-top: 0;
+      color: #0d70a1;
+    }
+
+    .details-container p {
+      font-size: 1.1em;
+      margin: 10px 0;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background-color: #0d70a1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .back-btn:hover {
+      background-color: #095a83;
+    }
+  </style>
+</head>
+<body>
+
+  <header>🏏 SportsKart - Item Details</header>
+
+  <div class="details-container">
+    <h2 id="itemName">Item Name</h2>
+    <p><strong>Category:</strong> <span id="itemCategory">Category</span></p>
+    <p><strong>Available Quantity:</strong> <span id="itemQuantity">0</span></p>
+    
+    <button class="back-btn" onclick="window.history.back()">← Go Back</button>
+  </div>
+
+  <script>
+    // Parse query parameters from URL
+    function getQueryParams() {
+      const params = {};
+      const queryString = window.location.search.slice(1);
+      const pairs = queryString.split('&');
+      for (const pair of pairs) {
+        const [key, value] = pair.split('=');
+        params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+      }
+      return params;
+    }
+
+    const params = getQueryParams();
+    document.getElementById('itemName').textContent = params.equipment || 'Unknown';
+    document.getElementById('itemCategory').textContent = params.category || 'Unknown';
+    document.getElementById('itemQuantity').textContent = params.quantity || 'N/A';
+  </script>
+
+</body>
+</html>
