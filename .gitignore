@@ -1,0 +1,10 @@
+# IntelliJ / IDEA
+.idea/
+*.iml
+
+# Maven / Spring Boot build directory
+target/
+
+# OS files
+*.log
+.DS_Store
